@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "219790567873",
+    "firebase_url": "https://edoctor-test.firebaseio.com",
+    "project_id": "edoctor-test",
+    "storage_bucket": "edoctor-test.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:219790567873:android:fc6d7f15314b55fc87e740",
+        "android_client_info": {
+          "package_name": "vn.edoctor.partner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "219790567873-v5fcuqabssmjtug5b3nmf6k83rg3js81.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnm6wNSIjnP5Hx3vI-oDbGwbsyFD4TjKI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "219790567873-o50vvsaghupauf2hd415t7sjprt3maqn.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "219790567873-v9rj7no5oj6e8cbffc16tqhhn86j8o1v.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.testsendbirdcall"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:219790567873:android:03cd03de62c56a3687e740",
+        "android_client_info": {
+          "package_name": "com.testsendbirdcall"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "219790567873-v5fcuqabssmjtug5b3nmf6k83rg3js81.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnm6wNSIjnP5Hx3vI-oDbGwbsyFD4TjKI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "219790567873-o50vvsaghupauf2hd415t7sjprt3maqn.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "219790567873-v9rj7no5oj6e8cbffc16tqhhn86j8o1v.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.testsendbirdcall"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
