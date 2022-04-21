@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CLIENT_ID</key>
+  <string>935659930018-tcsceal80a6te8d950jq5aj56ur2ks16.apps.googleusercontent.com</string>
+  <key>REVERSED_CLIENT_ID</key>
+  <string>com.googleusercontent.apps.935659930018-tcsceal80a6te8d950jq5aj56ur2ks16</string>
+  <key>ANDROID_CLIENT_ID</key>
+  <string>935659930018-i9136n9mvji8ophdug6ejn6m1c4rbsq3.apps.googleusercontent.com</string>
+  <key>API_KEY</key>
+  <string>AIzaSyBcTZWTXt2V71O80jgAlbpphGAtqUuoSZ8</string>
+  <key>GCM_SENDER_ID</key>
+  <string>935659930018</string>
+  <key>PLIST_VERSION</key>
+  <string>1</string>
+  <key>BUNDLE_ID</key>
+  <string>vn.edoctor.userapp</string>
+  <key>PROJECT_ID</key>
+  <string>edoctor-user-app-dev</string>
+  <key>STORAGE_BUCKET</key>
+  <string>edoctor-user-app-dev.appspot.com</string>
+  <key>IS_ADS_ENABLED</key>
+  <false></false>
+  <key>IS_ANALYTICS_ENABLED</key>
+  <false></false>
+  <key>IS_APPINVITE_ENABLED</key>
+  <true></true>
+  <key>IS_GCM_ENABLED</key>
+  <true></true>
+  <key>IS_SIGNIN_ENABLED</key>
+  <true></true>
+  <key>GOOGLE_APP_ID</key>
+  <string>1:935659930018:ios:0107ad4dc6cff00d38b2fb</string>
+  <key>DATABASE_URL</key>
+  <string>https://edoctor-user-app-dev.firebaseio.com</string>
+</dict>
+</plist>

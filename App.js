@@ -5,15 +5,12 @@ import {
   Button,
   PermissionsAndroid,
   Alert,
+  Platform,
 } from 'react-native';
 import {SendBirdCalls} from 'react-native-sendbird-calls';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import notifee, {
-  AndroidImportance,
-  EventType,
-  AndroidCategory,
-} from '@notifee/react-native';
+import notifee, {EventType} from '@notifee/react-native';
 
 import CallScreen from './CallScreen';
 import Calling from './Calling';
@@ -21,14 +18,21 @@ import {handleIncomingSendBirdCall} from '.';
 
 type Props = {};
 
-const APP_ID = '8905DE33-949A-4F12-A2CB-99A68365407B';
+const APP_ID = 'DCC02496-AE70-4480-BAAE-7ACFC55F9C24';
 
 const requestCameraPermission = async () => {
   try {
-    const granted = await PermissionsAndroid.requestMultiple([
-      PermissionsAndroid.PERMISSIONS.CAMERA,
-      PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-    ]);
+    if (Platform.OS === 'android') {
+      const granted = await PermissionsAndroid.requestMultiple([
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+      ]);
+    } else {
+      const authorizationStatus = await messaging().requestPermission();
+      if (authorizationStatus) {
+        console.log(authorizationStatus);
+      }
+    }
   } catch (err) {
     console.warn(err);
   }
@@ -91,7 +95,6 @@ export default function () {
       handleDirectCallDidConnect,
     );
     SendBirdCalls.addEventListener('DirectCallDidEnd', handleDirectCallDidEnd);
-    console.log('[SendBirdCalls] ********  ', SendBirdCalls);
     return () => {
       SendBirdCalls.removeAllEventListeners();
     };
@@ -118,14 +121,11 @@ export default function () {
         console.log('[CALLID] :  ', callId);
 
         if (id === 'decline') {
-          const {sendbird_call: sendbirdCall} = notificationData;
-
           try {
             await notifee.cancelNotification(callId);
             const data = await SendBirdCalls.endCall(callId);
           } catch (e) {}
         }
-
         if (id === 'accept') {
           try {
             const data = await SendBirdCalls.acceptCall(callId);
@@ -143,24 +143,22 @@ export default function () {
     }
     return notifee.onForegroundEvent(async ({type, detail}) => {
       console.log('[notifee onForegroundEvent]  ', type, detail);
-      const {
-        notification,
-        pressAction: {id},
-      } = detail;
-      const {sendbird_call: sendbirdCall} = notification.data;
-      const call = JSON.parse(sendbirdCall);
-      const callId = call?.command?.payload?.call_id || '';
+      const {notification, pressAction} = detail;
 
       if (type === EventType.ACTION_PRESS) {
-        if (id === 'accept') {
+        const {sendbird_call: sendbirdCall} = notification.data;
+        const call = JSON.parse(sendbirdCall);
+        const callId = call?.command?.payload?.call_id || '';
+        const pressId = pressAction?.id || '';
+        if (pressId === 'accept') {
           try {
             await notifee.cancelNotification(callId);
+            console.log('[accept call]', callId);
             const data = await SendBirdCalls.acceptCall(callId);
-            console.log('[accept call]', data);
           } catch (e) {
             console.log('[acceptCall] ERROR :  ', e, callId);
           }
-        } else if (id === 'decline') {
+        } else if (pressId === 'decline') {
           try {
             const data = await SendBirdCalls.endCall(callId);
             await notifee.cancelNotification(callId);
@@ -181,7 +179,11 @@ export default function () {
       const token = await messaging().getToken();
       if (token) {
         console.log('TOKEN: ', token);
-        SendBirdCalls.registerPushToken(token);
+        if (Platform.OS === 'android') {
+          SendBirdCalls.registerPushToken(token);
+        } else {
+          SendBirdCalls.setupVoIP();
+        }
       }
       setIsAuthenticate(true);
     } catch (error) {
@@ -231,7 +233,7 @@ export default function () {
         caller={caller}
         onCall={onCall}
         onLogout={async () => {
-          await AsyncStorage.removeItem('@caller');
+          await AsyncStorage.clear();
           setCaller(null);
           setIsAuthenticate(false);
           setCallInfo({});
@@ -242,8 +244,8 @@ export default function () {
 
   return (
     <View style={styles.container}>
-      <Button title="LOGIN USER 123" onPress={() => authenticate('123')} />
-      <Button title="LOGIN USER 321" onPress={() => authenticate('321')} />
+      <Button title="nhieu1" onPress={() => authenticate('nhieu1')} />
+      <Button title="nhieu2" onPress={() => authenticate('nhieu2')} />
     </View>
   );
 }

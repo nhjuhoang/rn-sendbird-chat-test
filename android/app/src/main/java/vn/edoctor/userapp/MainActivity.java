@@ -1,4 +1,4 @@
-package com.testsendbirdcall;
+package vn.edoctor.userapp;
 
 import com.facebook.react.ReactActivity;
 

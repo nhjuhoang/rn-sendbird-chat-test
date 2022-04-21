@@ -15,15 +15,14 @@ export default function CallScreen({
   return (
     <View style={styles.container}>
       <Text style={styles.welcome}>
-        Signed in user: #{caller.userId} {caller.nickname}
-        <Button title={`Logout #${caller.userId}`} onPress={onLogout} />
+        Signed in user: #{caller?.userId} {caller?.nickname}
+        <Button title={`Logout #${caller?.userId}`} onPress={onLogout} />
       </Text>
       <TextInput
         value={userId}
         style={styles.input}
         onChangeText={txt => setUserId(txt)}
         placeholder="User ID to call"
-        keyboardType="numeric"
       />
       <View style={{flexDirection: 'row'}}>
         <Button

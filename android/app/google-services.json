@@ -1,41 +1,41 @@
 {
   "project_info": {
-    "project_number": "219790567873",
-    "firebase_url": "https://edoctor-test.firebaseio.com",
-    "project_id": "edoctor-test",
-    "storage_bucket": "edoctor-test.appspot.com"
+    "project_number": "935659930018",
+    "firebase_url": "https://edoctor-user-app-dev.firebaseio.com",
+    "project_id": "edoctor-user-app-dev",
+    "storage_bucket": "edoctor-user-app-dev.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:219790567873:android:fc6d7f15314b55fc87e740",
+        "mobilesdk_app_id": "1:935659930018:android:83c05b44d13c906c",
         "android_client_info": {
-          "package_name": "vn.edoctor.partner"
+          "package_name": "vn.edoctor.collaborator"
         }
       },
       "oauth_client": [
         {
-          "client_id": "219790567873-v5fcuqabssmjtug5b3nmf6k83rg3js81.apps.googleusercontent.com",
+          "client_id": "935659930018-dblfjaibiihfanm3r64fail3iql0rnvj.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDnm6wNSIjnP5Hx3vI-oDbGwbsyFD4TjKI"
+          "current_key": "AIzaSyANAkH4IjykTjyYF0DQ7yhtfBZ1N1jcgXk"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "219790567873-o50vvsaghupauf2hd415t7sjprt3maqn.apps.googleusercontent.com",
+              "client_id": "935659930018-dblfjaibiihfanm3r64fail3iql0rnvj.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "219790567873-v9rj7no5oj6e8cbffc16tqhhn86j8o1v.apps.googleusercontent.com",
+              "client_id": "935659930018-fhs4vb7obpa3dunfj1ict6tr3tgo373l.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.testsendbirdcall"
+                "bundle_id": "vn.edoctor.collaborator"
               }
             }
           ]
@@ -44,34 +44,86 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:219790567873:android:03cd03de62c56a3687e740",
+        "mobilesdk_app_id": "1:935659930018:android:a3a1925a6f74cd78",
         "android_client_info": {
-          "package_name": "com.testsendbirdcall"
+          "package_name": "vn.edoctor.staff"
         }
       },
       "oauth_client": [
         {
-          "client_id": "219790567873-v5fcuqabssmjtug5b3nmf6k83rg3js81.apps.googleusercontent.com",
+          "client_id": "935659930018-i9136n9mvji8ophdug6ejn6m1c4rbsq3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "vn.edoctor.staff",
+            "certificate_hash": "e1b910a40a691619ae35c79afca46d1266b38f3c"
+          }
+        },
+        {
+          "client_id": "935659930018-dblfjaibiihfanm3r64fail3iql0rnvj.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDnm6wNSIjnP5Hx3vI-oDbGwbsyFD4TjKI"
+          "current_key": "AIzaSyANAkH4IjykTjyYF0DQ7yhtfBZ1N1jcgXk"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "219790567873-o50vvsaghupauf2hd415t7sjprt3maqn.apps.googleusercontent.com",
+              "client_id": "935659930018-dblfjaibiihfanm3r64fail3iql0rnvj.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "219790567873-v9rj7no5oj6e8cbffc16tqhhn86j8o1v.apps.googleusercontent.com",
+              "client_id": "935659930018-fhs4vb7obpa3dunfj1ict6tr3tgo373l.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.testsendbirdcall"
+                "bundle_id": "vn.edoctor.collaborator"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:935659930018:android:4d88c4e91309c42938b2fb",
+        "android_client_info": {
+          "package_name": "vn.edoctor.userapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "935659930018-rihabvr0ns4kscfpv780jt4ih5tunr8v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "vn.edoctor.userapp",
+            "certificate_hash": "3e1c7c9f46953fd184c836eb448d9dad48421b82"
+          }
+        },
+        {
+          "client_id": "935659930018-dblfjaibiihfanm3r64fail3iql0rnvj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANAkH4IjykTjyYF0DQ7yhtfBZ1N1jcgXk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "935659930018-dblfjaibiihfanm3r64fail3iql0rnvj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "935659930018-fhs4vb7obpa3dunfj1ict6tr3tgo373l.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "vn.edoctor.collaborator"
               }
             }
           ]

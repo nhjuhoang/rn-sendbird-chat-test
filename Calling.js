@@ -16,57 +16,61 @@ export default function Calling({
 }) {
   const {callId, isVideoCall, connected} = callInfo || {};
 
-  return (
-    <View style={styles.container}>
-      {connected ? (
-        <View style={styles.container}>
-          {callId && isVideoCall ? (
-            <View style={styles.container}>
-              <SendBirdCallsVideo
-                call={{callId: callId, local: false}}
-                style={styles.remoteVideo}
-              />
-              <SendBirdCallsVideo
-                call={{callId: callId, local: true}}
-                style={styles.localVideo}
-              />
-              <View>
-                <Text>Calling...</Text>
-                <Button title={'End call'} onPress={endCall} />
-              </View>
-            </View>
-          ) : (
-            <View>
-              <Text>Connected (00:01...)</Text>
+  const renderCallConnecting = () => {
+    return (
+      <View style={styles.container}>
+        {callId && isVideoCall ? (
+          <View style={styles.container}>
+            <SendBirdCallsVideo
+              call={{callId: callId, local: true}}
+              style={styles.remoteVideo}
+            />
+            <View style={styles.absoluteCenter}>
+              <Text>Calling...</Text>
               <Button title={'End call'} onPress={endCall} />
             </View>
-          )}
-        </View>
-      ) : (
-        <View style={styles.container}>
-          {callId && isVideoCall ? (
-            <View style={styles.container}>
-              <SendBirdCallsVideo
-                call={{callId: callId, local: true}}
-                style={styles.remoteVideo}
-              />
-              <View
-                style={{
-                  position: 'absolute',
-                  alignSelf: 'center',
-                }}>
-                <Text>Calling...</Text>
-                <Button title={'End call'} onPress={this.endCall} />
-              </View>
-            </View>
-          ) : (
-            <View style={styles.container}>
+          </View>
+        ) : (
+          <View style={styles.container}>
+            <Text>Calling...</Text>
+            <Button title={'End call'} onPress={endCall} />
+          </View>
+        )}
+      </View>
+    );
+  };
+
+  const renderCallConnected = () => {
+    return (
+      <View style={styles.container}>
+        {callId && isVideoCall ? (
+          <View style={styles.container}>
+            <SendBirdCallsVideo
+              call={{callId: callId, local: false}}
+              style={styles.remoteVideo}
+            />
+            <SendBirdCallsVideo
+              call={{callId: callId, local: true}}
+              style={styles.localVideo}
+            />
+            <View>
               <Text>Calling...</Text>
-              <Button title={'End call'} onPress={this.endCall} />
+              <Button title={'End call'} onPress={endCall} />
             </View>
-          )}
-        </View>
-      )}
+          </View>
+        ) : (
+          <View>
+            <Text>Connected (00:01...)</Text>
+            <Button title={'End call'} onPress={endCall} />
+          </View>
+        )}
+      </View>
+    );
+  };
+
+  return (
+    <View style={styles.container}>
+      {connected ? renderCallConnected() : renderCallConnecting()}
     </View>
   );
 }
@@ -87,5 +91,9 @@ const styles = StyleSheet.create({
     right: 10,
     width: 100,
     height: 100,
+  },
+  absoluteCenter: {
+    position: 'absolute',
+    alignSelf: 'center',
   },
 });
