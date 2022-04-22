@@ -36,6 +36,30 @@ export default function CallScreen({
           onPress={() => onCall(userId, false)}
         />
       </View>
+      <View style={{flexDirection: 'row'}}>
+        <Button
+          color={'green'}
+          title={'Video call nhieu1'}
+          onPress={() => onCall('nhieu1', true)}
+        />
+        <Button
+          color={'blue'}
+          title={'Voice call nhieu1'}
+          onPress={() => onCall('nhieu1', false)}
+        />
+      </View>
+      <View style={{flexDirection: 'row'}}>
+        <Button
+          color={'green'}
+          title={'Video call nhieu2'}
+          onPress={() => onCall('nhieu2', true)}
+        />
+        <Button
+          color={'blue'}
+          title={'Voice call nhieu2'}
+          onPress={() => onCall('nhieu2', false)}
+        />
+      </View>
     </View>
   );
 }

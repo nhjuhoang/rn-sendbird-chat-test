@@ -22,17 +22,18 @@ export default function Calling({
         {callId && isVideoCall ? (
           <View style={styles.container}>
             <SendBirdCallsVideo
+              callId={callId}
               call={{callId: callId, local: true}}
               style={styles.remoteVideo}
             />
             <View style={styles.absoluteCenter}>
-              <Text>Calling...</Text>
+              <Text>Connecting</Text>
               <Button title={'End call'} onPress={endCall} />
             </View>
           </View>
         ) : (
           <View style={styles.container}>
-            <Text>Calling...</Text>
+            <Text>Audio Calling...</Text>
             <Button title={'End call'} onPress={endCall} />
           </View>
         )}
@@ -46,21 +47,25 @@ export default function Calling({
         {callId && isVideoCall ? (
           <View style={styles.container}>
             <SendBirdCallsVideo
+              callId={callId}
+              local={false}
               call={{callId: callId, local: false}}
               style={styles.remoteVideo}
             />
             <SendBirdCallsVideo
+              callId={callId}
+              local={true}
               call={{callId: callId, local: true}}
               style={styles.localVideo}
             />
             <View>
-              <Text>Calling...</Text>
+              <Text>00:00</Text>
               <Button title={'End call'} onPress={endCall} />
             </View>
           </View>
         ) : (
           <View>
-            <Text>Connected (00:01...)</Text>
+            <Text>Audio (00:01...)</Text>
             <Button title={'End call'} onPress={endCall} />
           </View>
         )}

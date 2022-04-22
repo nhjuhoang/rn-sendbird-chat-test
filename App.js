@@ -138,9 +138,10 @@ export default function () {
   }, [isAuthenticate]);
 
   React.useEffect(() => {
-    if (!isAuthenticate) {
+    if (!isAuthenticate && Platform.OS !== 'android') {
       return () => {};
     }
+
     return notifee.onForegroundEvent(async ({type, detail}) => {
       console.log('[notifee onForegroundEvent]  ', type, detail);
       const {notification, pressAction} = detail;
