@@ -8,3 +8,8 @@
 #   http://developer.android.com/guide/developing/tools/proguard.html
 
 # Add any project specific keep options here:
+# Sendbird Calls SDK
+-keep class com.sendbird.calls.** { *; }
+-keep class org.webrtc.** { *; }
+-dontwarn org.webrtc.**
+-keepattributes InnerClasses

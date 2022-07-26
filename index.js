@@ -2,121 +2,87 @@
  * @format
  */
 
-import {AppRegistry} from 'react-native';
+import {AppRegistry, Platform} from 'react-native';
 import App from './App';
+import LockScreenIncoming from './LockScreenIncoming';
 import {name as appName} from './app.json';
 import messaging from '@react-native-firebase/messaging';
-import notifee, {
-  AndroidImportance,
-  AndroidCategory,
-  EventType,
-} from '@notifee/react-native';
-import {SendBirdCalls} from 'react-native-sendbird-calls';
+
+import SendBirdCalls from 'react-native-sendbird-calls';
 
 AppRegistry.registerComponent(appName, () => App);
+AppRegistry.registerComponent(
+  'IncomingVirtualNativeScreen',
+  () => LockScreenIncoming,
+);
 
-// Register background handler
-messaging().setBackgroundMessageHandler(handleIncomingSendBirdCall);
-notifee.onBackgroundEvent(notifeeBackgroundEventHandler);
-
-async function notifeeBackgroundEventHandler({type, detail}) {
-  console.log(
-    '[notifeeBackgroundEventHandler]: ',
-    'type:' + type,
-    'detail:' + detail,
-  );
-  if (type === EventType.ACTION_PRESS) {
-    const {
-      notification,
-      pressAction: {id},
-    } = detail;
-    if (id === 'accept') {
-      const {sendbird_call: sendbirdCall} = notification.data;
-
-      try {
-        const call = JSON.parse(sendbirdCall);
-        const {
-          command: {
-            payload: {call_id: callId},
-          },
-        } = call;
-        // can't accept/decline call here, the app isn't ready yet
-        // const data = await SendBirdCalls.acceptCall(callId);
-        await notifee.cancelNotification(callId);
-      } catch (e) {}
-    } else if (id === 'decline') {
-      const {sendbird_call: sendbirdCall} = notification.data;
-      try {
-        const call = JSON.parse(sendbirdCall);
-        const {
-          command: {
-            payload: {call_id: callId},
-          },
-        } = call;
-        const data = await SendBirdCalls.endCall(callId);
-        await notifee.cancelNotification(callId);
-      } catch (e) {}
-    }
-  }
-}
-
-export async function handleIncomingSendBirdCall(remoteMessage) {
-  console.log('[handleIncomingSendBirdCall]:  ', remoteMessage);
-  const {message, sendbird_call: sendbirdCall} = remoteMessage.data;
-
-  if (sendbirdCall) {
-    try {
+AppRegistry.registerHeadlessTask(
+  'VcHeadlessService',
+  () => (params: Record<string, any>) =>
+    new Promise(resolve => {
+      console.log('VcHeadlessServiceVcHeadlessService ********  ', params);
+      const sendbirdCall = params.sendbird_call || '';
       const call = JSON.parse(sendbirdCall);
-      const {
-        command: {
-          payload: {call_id: callId},
-          type,
-        },
-      } = call;
-
-      if (callId) {
-        const channelId = await notifee.createChannel({
-          id: 'important',
-          name: 'Important Channel',
-          importance: AndroidImportance.HIGH,
-        });
-
-        if (type === 'dial') {
-          // Display a notification
-          await notifee.displayNotification({
-            id: callId,
-            title: 'SendBirdCalls',
-            body: message,
-            data: remoteMessage.data,
-            android: {
-              channelId,
-              category: AndroidCategory.CALL,
-              importance: AndroidImportance.HIGH,
-              autoCancel: false,
-              ongoing: true,
-              actions: [
-                {
-                  title: 'DECLINE',
-                  pressAction: {
-                    id: 'decline',
-                    launchActivity: 'default',
-                  },
-                },
-                {
-                  title: 'ACCEPT',
-                  pressAction: {
-                    id: 'accept',
-                    launchActivity: 'default',
-                  },
-                },
-              ],
-              // smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
-            },
-          });
-        } else if (type === 'cancel') {
-          await notifee.cancelNotification(callId);
+      const callId = call?.command?.payload?.call_id || '';
+      switch (params?.ACTION) {
+        case 'DENIED': {
+          if (callId) {
+            SendBirdCalls.endIncomingCallNeedAuthentication(callId);
+            resolve();
+            return;
+          }
+          break;
+        }
+        case 'ACCEPT': {
+          if (callId) {
+            SendBirdCalls.acceptIncomingCallNeedAuthentication(callId);
+            resolve();
+            return;
+          }
+          break;
+        }
+        default: {
+          resolve();
+          break;
         }
       }
-    } catch (e) {}
+    }),
+);
+
+messaging().setBackgroundMessageHandler(async remoteMessage => {
+  const data = remoteMessage?.data;
+  if (!data) {
+    return;
   }
-}
+
+  const sendbirdCall = remoteMessage.data?.sendbird_call || '';
+  const call = JSON.parse(sendbirdCall);
+  const callId = call?.command?.payload?.call_id || '';
+  const type = call?.command?.type || '';
+
+  if (type === 'dial') {
+    const message = remoteMessage.data?.message || '';
+    const timeout = 60; // second
+    const params = {
+      title: 'Cuộc gọi đến từ phòng khám',
+      description: message || 'Bạn đang có cuộc gọi đến',
+      timeoutAfter: timeout * 1000,
+      isNativeScreen: true,
+      ...remoteMessage.data,
+    };
+    SendBirdCalls.wakeAppIncomingCall(params);
+    // console.log('Ố dè *******setBackgroundMessageHandler*  ', params);
+    // if (Platform.Version >= 29) {
+    //   const isDeviceLocked = await SendBirdCalls.getDeviceLocked();
+    //   if (isDeviceLocked) {
+
+    //   } else {
+    //     SendBirdCalls.wakeApp(params);
+    //   }
+    // } else {
+    //   SendBirdCalls.resumeApp(params);
+    // }
+  } else if (type === 'cancel') {
+    await SendBirdCalls.cancelComingCallNotification();
+  }
+});

@@ -39,25 +39,50 @@ export default function CallScreen({
       <View style={{flexDirection: 'row'}}>
         <Button
           color={'green'}
-          title={'Video call nhieu1'}
-          onPress={() => onCall('nhieu1', true)}
+          title={'Video call nhieuNH'}
+          onPress={() => onCall('pCUBG6RdNI4pkXJr', true)}
         />
         <Button
           color={'blue'}
-          title={'Voice call nhieu1'}
-          onPress={() => onCall('nhieu1', false)}
+          title={'Voice call nhieu03'}
+          onPress={() => onCall('nhieu03', false)}
         />
       </View>
       <View style={{flexDirection: 'row'}}>
         <Button
           color={'green'}
-          title={'Video call nhieu2'}
-          onPress={() => onCall('nhieu2', true)}
+          title={'Video call nhieu04'}
+          onPress={() => onCall('nhieu04', true)}
         />
         <Button
           color={'blue'}
-          title={'Voice call nhieu2'}
-          onPress={() => onCall('nhieu2', false)}
+          title={'Voice call nhieu04'}
+          onPress={() => onCall('nhieu04', false)}
+        />
+      </View>
+
+      <View style={{flexDirection: 'row'}}>
+        <Button
+          color={'green'}
+          title={'Video call Chim sẻ'}
+          onPress={() => onCall('chimse', true)}
+        />
+        <Button
+          color={'blue'}
+          title={'Voice call Chim sẻ'}
+          onPress={() => onCall('chimse', false)}
+        />
+      </View>
+      <View style={{flexDirection: 'row'}}>
+        <Button
+          color={'green'}
+          title={'Video call Đại Bàng'}
+          onPress={() => onCall('daibang', true)}
+        />
+        <Button
+          color={'blue'}
+          title={'Voice call Đại Bàng'}
+          onPress={() => onCall('daibang', false)}
         />
       </View>
     </View>

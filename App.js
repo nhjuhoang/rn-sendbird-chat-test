@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React from 'react';
 import {
   View,
@@ -7,18 +8,16 @@ import {
   Alert,
   Platform,
 } from 'react-native';
-import {SendBirdCalls} from 'react-native-sendbird-calls';
+import {SendBirdCalls, SendBirdCallsEvents} from 'react-native-sendbird-calls';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import notifee, {EventType} from '@notifee/react-native';
 
-import CallScreen from './CallScreen';
 import Calling from './Calling';
-import {handleIncomingSendBirdCall} from '.';
+import CallScreen from './CallScreen';
+import InComingCall from './InComingCall';
 
 type Props = {};
-
-const APP_ID = 'DCC02496-AE70-4480-BAAE-7ACFC55F9C24';
 
 const requestCameraPermission = async () => {
   try {
@@ -38,7 +37,8 @@ const requestCameraPermission = async () => {
   }
 };
 
-export default function () {
+
+export default function (props) {
   const [isAuthenticate, setIsAuthenticate] = React.useState(false);
   const [caller, setCaller] = React.useState({});
   const [callInfo, setCallInfo] = React.useState({
@@ -46,89 +46,64 @@ export default function () {
     callId: '',
     isVideoCall: false,
     connected: false,
+    inComingCall: false,
+
+    isLocalAudioEnabled: true,
+    isLocalVideoEnabled: true,
+    isRemoteAudioEnabled: true,
+    isRemoteVideoEnabled: true,
   });
 
   React.useEffect(() => {
     const init = async () => {
-      await SendBirdCalls.setup(APP_ID)
-        .then(() => console.log('[SETUP SUCCESS]'))
-        .catch(() => console.log('[SETUP FAILD]'));
-
       const callerId = await AsyncStorage.getItem('@callerId');
       if (callerId) {
         authenticate(callerId);
-        setIsAuthenticate(true);
       }
     };
     init();
   }, []);
 
-  React.useEffect(() => {
-    if (!isAuthenticate) {
-      return () => {};
-    }
-    const handleDirectCallDidConnect = data => {
-      console.log('[DirectCallDidConnect]: ', data);
-      const {callId, isVideoCall} = data;
-      setCallInfo(cur => ({
-        ...cur,
-        calling: true,
-        callId,
-        isVideoCall,
-        connected: true,
-      }));
-    };
 
-    const handleDirectCallDidEnd = data => {
-      console.log('[DirectCallDidEnd]: ', data);
-      setCallInfo(cur => ({
-        ...cur,
-        calling: false,
-        callId: '',
-        isVideoCall: false,
-        connected: false,
-      }));
-    };
-
-    SendBirdCalls.addEventListener(
-      'DirectCallDidConnect',
-      handleDirectCallDidConnect,
-    );
-    SendBirdCalls.addEventListener('DirectCallDidEnd', handleDirectCallDidEnd);
-    return () => {
-      SendBirdCalls.removeAllEventListeners();
-    };
-  }, [isAuthenticate]);
 
   React.useEffect(() => {
     if (!isAuthenticate) {
       return () => {};
     }
-    messaging().onMessage(handleIncomingSendBirdCall);
 
     (async () => {
       const initialNotification = await notifee.getInitialNotification();
+      const ongoingCalls = await SendBirdCalls.getOngoingCalls();
       console.log('[initialNotification] :  ', initialNotification);
-      if (initialNotification) {
-        const {
-          notification: {data: notificationData, id: notificationId},
-          pressAction: {id},
-        } = initialNotification;
-        const {sendbird_call: sendbirdCall} = notificationData;
-        const call = JSON.parse(sendbirdCall);
-        const callId = call?.command?.payload?.call_id || '';
-        console.log('[CALL DATA] :  ', call);
-        console.log('[CALLID] :  ', callId);
+      console.log('[ongoingCalls] :  ', ongoingCalls);
 
-        if (id === 'decline') {
+    if (!initialNotification) {return;}
+
+      const sendbirdCall = initialNotification?.notification?.data?.sendbird_call || '';
+      const call = JSON.parse(sendbirdCall);
+      const pressActionId = initialNotification?.pressAction?.id || '';
+      const callId = call?.command?.payload?.call_id || '';
+
+      console.log('[CALL DATA] :  ', call);
+      console.log('[CALLID] :  ', callId);
+
+      if (initialNotification) {
+        if (pressActionId === 'decline') {
           try {
             await notifee.cancelNotification(callId);
-            const data = await SendBirdCalls.endCall(callId);
+            await SendBirdCalls.endCall(callId);
           } catch (e) {}
         }
-        if (id === 'accept') {
+        if (pressActionId === 'accept') {
           try {
-            const data = await SendBirdCalls.acceptCall(callId);
+            await SendBirdCalls.acceptCall(callId).then((res) => {
+              console.log('Ố dè ******** acceptCall ', res, callId);
+              // SendBirdCalls.getCall(callId).then((resGetCall) => {
+              //   console.log('SendBirdCalls.getCall:::  ', resGetCall);
+              // });
+            }).catch((e) => {
+              console.log('[acceptCall] ERROR : 111 ', e, callId);
+            });
           } catch (e) {
             console.log('[acceptCall] ERROR :  ', e, callId);
           }
@@ -137,6 +112,7 @@ export default function () {
     })();
   }, [isAuthenticate]);
 
+  // onForegroundEvent
   React.useEffect(() => {
     if (!isAuthenticate && Platform.OS !== 'android') {
       return () => {};
@@ -147,7 +123,7 @@ export default function () {
       const {notification, pressAction} = detail;
 
       if (type === EventType.ACTION_PRESS) {
-        const {sendbird_call: sendbirdCall} = notification.data;
+        const sendbirdCall = notification.data?.sendbird_call || {};
         const call = JSON.parse(sendbirdCall);
         const callId = call?.command?.payload?.call_id || '';
         const pressId = pressAction?.id || '';
@@ -155,13 +131,13 @@ export default function () {
           try {
             await notifee.cancelNotification(callId);
             console.log('[accept call]', callId);
-            const data = await SendBirdCalls.acceptCall(callId);
+            await SendBirdCalls.acceptCall(callId);
           } catch (e) {
             console.log('[acceptCall] ERROR :  ', e, callId);
           }
         } else if (pressId === 'decline') {
           try {
-            const data = await SendBirdCalls.endCall(callId);
+            SendBirdCalls.endCall(callId);
             await notifee.cancelNotification(callId);
           } catch (e) {
             console.log('[decline] ERROR :  ', e, callId);
@@ -170,6 +146,7 @@ export default function () {
       }
     });
   }, [isAuthenticate]);
+  // end onForegroundEvent
 
   const authenticate = async (userId: string) => {
     try {
@@ -209,6 +186,13 @@ export default function () {
     }
   };
 
+
+
+  const acceptCall = async () => {
+    console.log('Ố dè ********  ', callInfo);
+    await SendBirdCalls.acceptCall(callInfo.callId);
+  };
+
   const endCall = async () => {
     await SendBirdCalls.endCall(callInfo.callId)
       .then(() => {
@@ -223,6 +207,16 @@ export default function () {
         console.log('[END CALL ERROR]');
       });
   };
+
+  if (callInfo?.inComingCall) {
+    return (
+    <InComingCall
+      callInfo={callInfo}
+      acceptCall={acceptCall}
+      endCall={endCall}
+    />
+  );
+}
 
   if (callInfo.calling) {
     return <Calling callInfo={callInfo} endCall={endCall} />;
@@ -245,8 +239,10 @@ export default function () {
 
   return (
     <View style={styles.container}>
-      <Button title="nhieu1" onPress={() => authenticate('nhieu1')} />
-      <Button title="nhieu2" onPress={() => authenticate('nhieu2')} />
+      <Button title="nhieu03" onPress={() => authenticate('nhieu03')} />
+      <Button title="nhieu04" onPress={() => authenticate('nhieu04')} />
+      <Button title="Chim sẻ" onPress={() => authenticate('chimse')} />
+      <Button title="Đại bàng" onPress={() => authenticate('daibang')} />
     </View>
   );
 }
